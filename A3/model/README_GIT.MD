@@ -34,8 +34,11 @@ To update, go to VCS/update project, and you should get a choice of Merge or Reb
 ### Updating the project for others (Commits & Push)
 If you want to update the project, you go to the 'commit' tab (should be on the left). There should be a choice called 'Default Changelist', and under it should be the files you've changed/added. Make sure they are ticked, and there should be a type-able space above the Commit button at the bottom. This is the commit comment box, where you write what you've done for this update. 
 
-Click 'commit', and all collaborators *should* be notified about something new. NOTE: the repository is still not updated, so continue on to Push.
+Click 'commit' and your current work (for the files you chose) would be saved at this state. It is like a save file in video games, and if you want to go back, you can go to the Git window (at the bottom) and see your commit history (and go back to either). NOTE: the remote repository is still not updated yet, so continue on to Push.
 
-Push-ing is you updating the repository, and others can then update their versions with what you've done. 
-
+Push-ing is you updating the repository, and others can then update their versions with what you've done. Make sure you have the 'build' branch on (instead of 'main', see Branches below), what it does is it updates the remote repository with all of your commits to that 'build' branch. 
+ 
 ### Working with different versions (Branches)
+On the right bottom of Pycharm, you should see a branch-looking icon with a colour circle (probably green, yellow or red) with 'main' on it. Make sure it is set to 'build' (or anything other than 'main'). 
+
+Branches are duplicates of the same repository, so you can experiment and test new features without breaking the original. Updating 'main' branch is reserved for very bulletproof/watertight builds, when we've tested and are happy with it.
