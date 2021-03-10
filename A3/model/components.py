@@ -304,6 +304,6 @@ class Vehicle(Agent):
         self.location = next_infra
         self.location_offset = location_offset
         self.location.vehicle_count += 1
-        print("Hallo")
+        print("Hallo test")
 
 # EOF -----------------------------------------------------------
