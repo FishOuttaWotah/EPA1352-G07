@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fb55a0a9-11ab-4acf-bf02-33f9a94196a6" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="JupyterTrust" id="7e0c7fee-8c5e-4209-a61b-311f2af2794c" />
+  <component name="ProjectId" id="1osVqhHIW45gQCnsSh2Rlhae1IH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RunManager" selected="Python.model_run">
+    <configuration name="A2 model_viz" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EPA1352-Lab" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EPA1352-G07-A2/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EPA1352-G07-A2/model/A2 model_viz.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Plotta" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EPA1352-Lab" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EPA1352-G07-A2/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EPA1352-G07-A2/model/Plotta.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="model" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EPA1352-Lab" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EPA1352-G07-A2/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EPA1352-G07-A2/model/model.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="model_run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EPA1352-Lab" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EPA1352-G07-A2/model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EPA1352-G07-A2/model/model_run.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.model_run" />
+        <item itemvalue="Python.model" />
+        <item itemvalue="Python.model" />
+        <item itemvalue="Python.Plotta" />
+        <item itemvalue="Python.A2 model_viz" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fb55a0a9-11ab-4acf-bf02-33f9a94196a6" name="Default Changelist" comment="" />
+      <created>1614075498893</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1614075498893</updated>
+      <workItem from="1614075504603" duration="23979000" />
+      <workItem from="1614512382076" duration="24431000" />
+      <workItem from="1614683576197" duration="9850000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="3049" y="114" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1614075786627">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state x="3049" y="114" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614075786627" />
+    <state width="760" height="855" key="GridCell.Tab.0.bottom" timestamp="1614692885145">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1676" height="856" key="GridCell.Tab.0.bottom/0.0.1676.913/1920.0.2234.913@0.0.1676.913" timestamp="1614581044292" />
+    <state width="760" height="855" key="GridCell.Tab.0.bottom/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614692885145" />
+    <state width="760" height="855" key="GridCell.Tab.0.center" timestamp="1614692885145">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1676" height="856" key="GridCell.Tab.0.center/0.0.1676.913/1920.0.2234.913@0.0.1676.913" timestamp="1614581044291" />
+    <state width="760" height="855" key="GridCell.Tab.0.center/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614692885145" />
+    <state width="760" height="855" key="GridCell.Tab.0.left" timestamp="1614692885145">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1676" height="856" key="GridCell.Tab.0.left/0.0.1676.913/1920.0.2234.913@0.0.1676.913" timestamp="1614581044291" />
+    <state width="760" height="855" key="GridCell.Tab.0.left/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614692885145" />
+    <state width="760" height="855" key="GridCell.Tab.0.right" timestamp="1614692885145">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1676" height="856" key="GridCell.Tab.0.right/0.0.1676.913/1920.0.2234.913@0.0.1676.913" timestamp="1614581044291" />
+    <state width="760" height="855" key="GridCell.Tab.0.right/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614692885145" />
+    <state width="1439" height="640" key="GridCell.Tab.1.bottom" timestamp="1614680998253">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1439" height="640" key="GridCell.Tab.1.bottom/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614680998253" />
+    <state width="1439" height="640" key="GridCell.Tab.1.center" timestamp="1614680998253">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1439" height="640" key="GridCell.Tab.1.center/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614680998253" />
+    <state width="1439" height="640" key="GridCell.Tab.1.left" timestamp="1614680998253">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1439" height="640" key="GridCell.Tab.1.left/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614680998253" />
+    <state width="1439" height="640" key="GridCell.Tab.1.right" timestamp="1614680998253">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="1439" height="640" key="GridCell.Tab.1.right/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614680998253" />
+    <state x="2178" y="101" key="SettingsEditor" timestamp="1614688047986">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state x="2178" y="101" key="SettingsEditor/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614688047986" />
+    <state width="627" height="460" key="XDebugger.FullValuePopup" timestamp="1614688710122">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state width="627" height="460" key="XDebugger.FullValuePopup/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614688710122" />
+    <state x="2333" y="197" key="search.everywhere.popup" timestamp="1614691134640">
+      <screen x="1920" y="0" width="2234" height="913" />
+    </state>
+    <state x="2333" y="197" key="search.everywhere.popup/0.0.1676.913/1920.0.2234.913@1920.0.2234.913" timestamp="1614691134640" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/EPA1352_Lab$A2_model_viz.coverage" NAME="A2 model_viz Coverage Results" MODIFIED="1614309818995" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EPA1352-G07-A2/model" />
+    <SUITE FILE_PATH="coverage/EPA1352_Lab$Plotta.coverage" NAME="Plotta Coverage Results" MODIFIED="1614591724488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EPA1352-G07-A2/model" />
+    <SUITE FILE_PATH="coverage/EPA1352_Lab$model_run.coverage" NAME="model_run Coverage Results" MODIFIED="1614692885129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/EPA1352-G07-A2/model" />
+  </component>
+</project>
