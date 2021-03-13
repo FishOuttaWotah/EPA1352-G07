@@ -6,8 +6,6 @@ This document is a (hopefully) easy to understand way to get Git up and running.
 To browse the remote repository, go here (there's another URL for the git setup side): 
 [HERE](https://github.com/FishOuttaWotah/EPA1352-G07/tree/main) 
 
-
-## TODO reset interpreter section and usage
 ## Command References (WIP)
 
 ## Getting started (Beta)
