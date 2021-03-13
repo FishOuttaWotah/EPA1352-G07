@@ -55,9 +55,9 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    file_name = '../data/demo-4.csv'
+    file_name = '../data/compiled_roads_bridges.csv'
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
+    def __init__(self, scenario_num=0, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
         self.schedule = BaseScheduler(self)
         self.running = True
@@ -65,6 +65,10 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
+        self.scenario = scenario_num
+        self.scenario_df = pd.read_csv('../data/scenario_table.csv', index_col='Scenario')
+        # output probabilities of failure for this scenario
+        self.prob_bd = self.scenario_df.loc[self.scenario] / 100
 
         self.generate_model()
 
@@ -78,8 +82,7 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
 
         # a list of names of roads to be generated
-        # TODO You can also read in the road column to generate this list automatically
-        roads = ['N1', 'N2']
+        roads = df.road.unique()
 
         df_objects_all = []
         for road in roads:
@@ -159,18 +162,24 @@ class BangladeshModel(Model):
 
     def get_random_route(self, source):
         """
-        pick up a random route given an origin
+        pick up a random route given an origin and find the shortest path
+
         """
         while True:
             # different source and sink
             sink = self.random.choice(self.sinks)
             if sink is not source:
                 break
+        # Whenever the path isn't defined yet, find the shortest path with nwx and add to dictionary
+        if not (source, sink) in self.path_ids_dict:
+            print("Non existing dict key")
+            #path_ids_nwx_gen = func(source, sink)
+            #self.path_ids_dict[source, sink] = path_ids_nwx_gen
         return self.path_ids_dict[source, sink]
 
-    # TODO
+
     def get_route(self, source):
-        return self.get_straight_route(source)
+        return self.get_random_route(source)
 
     def get_straight_route(self, source):
         """
