@@ -66,7 +66,7 @@ class Bridge(Infra):
                  name='Unknown', road_name='Unknown', condition='Unknown'):
         super().__init__(unique_id, model, length, name, road_name)
 
-        self.condition = condition
+        self.condition = condition # from A to D
         self.delay_time = 0
         self.broken_down = False
 

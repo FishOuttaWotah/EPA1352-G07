@@ -1,6 +1,10 @@
 # Git for Noobs like us
 *Written by Sherman (hence you can blame him)*
 
+//TODO: write cherry-picking
+//TODO: write checking out branches 
+//TODO: write how to use debug and advanced Pycharm functions
+
 This document is a (hopefully) easy to understand way to get Git up and running. 
 
 To browse the remote repository, go here (there's another URL for the git setup side): 
