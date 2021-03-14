@@ -20,9 +20,9 @@ F: assigned delays could be set as 'distance-normalised for delay' for bridge po
 
 """
 
-class NX_Graph:
+class Road_n_Network:
 
-    def __init__(self, roads_file='../data/compiled_roads_bridges.csv', trunc=True):
+    def __init__(self, roads_file='../data/compiled_roads_bridges.csv', trunc=False):
         # OPEN ROAD ELEMENT FILES,
         self.raw = pd.read_csv(roads_file)
         self.raw['model_type'] = self.raw.model_type.str.strip()  # ensures only chars remain and no hidden whitespace
@@ -91,4 +91,21 @@ class NX_Graph:
         broken_points = []
         # iterate from start to end, finding points where
 
+        pass
+
+    """
+    NX expected outputs to MESA
+    * import this into model.py
+    * create a Road_n_Network object in model
+    * current road geometry uses Rory's csv by default
+    * TO FIND SHORTEST PATH, run <RnN obj>.find_shortest_path(<source>,<target>).
+    * some dataframe objects can be retrieved from calling <RnN obj>.something:
+        .raw = full Rory's dataset in Pandas
+        .intersections = subset of intersection points
+        .sourcesinks = sourcesink objects
+        .nodes = node points
+        .nx_roads = the actual NX Graph object (which is used for NX functions)
+    """
+
+    if __name__ == '__main__':  # ensures that this script won't run fully when imported
         pass
