@@ -4,6 +4,7 @@ from mesa.space import ContinuousSpace
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
+from networkX_sandbox import Road_n_Network
 
 
 # ---------------------------------------------------------------
@@ -55,7 +56,7 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    file_name = '../data/demo-4.csv'
+    file_name = '../data/compiled_roads_bridges.csv'
 
     def __init__(self, scenario_num=0, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -68,7 +69,7 @@ class BangladeshModel(Model):
         self.scenario = scenario_num # Number of scenario to look up from scenario table
         # Load scenario table: each row gives the probabilities of breaking down for 1 scenario
         self.scenario_df = pd.read_csv('../data/scenario_table.csv')
-
+        self.nwx = Road_n_Network()
         self.generate_model()
 
     def generate_model(self):
@@ -172,10 +173,9 @@ class BangladeshModel(Model):
         # Whenever the path isn't defined yet, find the shortest path with nwx and add to dictionary
         if not (source, sink) in self.path_ids_dict:
             print("Non existing dict key")
-            #path_ids_nwx_gen = func(source, sink)
+            path_ids_nwx_gen = self.nwx(source, sink)
             #self.path_ids_dict[source, sink] = path_ids_nwx_gen
         return self.path_ids_dict[source, sink]
-
 
     def get_route(self, source):
         return self.get_straight_route(source)
