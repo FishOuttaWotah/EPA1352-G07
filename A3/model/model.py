@@ -151,7 +151,9 @@ class BangladeshModel(Model):
                     agent = Link(row['id'], self, row['length'], name, row['road'])
                 elif model_type == 'intersection':
                     if not row['id'] in self.schedule._agents:
-                        agent = Intersection(row['id'], self, row['length'], name, row['road'])
+                        #agent = Intersection(row['id'], self, row['length'], name, row['road'])
+                        agent = SourceSink(row['id'], self, row['length'], name, row['road'])
+                        self.sinks.append(agent.unique_id) #temp
 
                 if agent:
                     self.schedule.add(agent)
@@ -173,8 +175,8 @@ class BangladeshModel(Model):
         # Whenever the path isn't defined yet, find the shortest path with nwx and add to dictionary
         if not (source, sink) in self.path_ids_dict:
             print("Non existing dict key")
-            path_ids_nwx_gen = self.nwx(source, sink)
-            #self.path_ids_dict[source, sink] = path_ids_nwx_gen
+            path_ids_nwx_gen, length = pd.series(self.nwx.find_shortest_path(source, sink))
+            self.path_ids_dict[source, sink] = path_ids_nwx_gen
         return self.path_ids_dict[source, sink]
 
     def get_route(self, source):
