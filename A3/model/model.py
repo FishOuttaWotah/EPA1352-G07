@@ -55,7 +55,7 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    file_name = '../data/compiled_roads_bridges.csv'
+    file_name = '../data/demo-4.csv'
 
     def __init__(self, scenario_num=0, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
 
@@ -65,10 +65,9 @@ class BangladeshModel(Model):
         self.space = None
         self.sources = []
         self.sinks = []
-        self.scenario = scenario_num
-        self.scenario_df = pd.read_csv('../data/scenario_table.csv', index_col='Scenario')
-        # output probabilities of failure for this scenario
-        self.prob_bd = self.scenario_df.loc[self.scenario] / 100
+        self.scenario = scenario_num # Number of scenario to look up from scenario table
+        # Load scenario table: each row gives the probabilities of breaking down for 1 scenario
+        self.scenario_df = pd.read_csv('../data/scenario_table.csv')
 
         self.generate_model()
 
@@ -179,7 +178,7 @@ class BangladeshModel(Model):
 
 
     def get_route(self, source):
-        return self.get_random_route(source)
+        return self.get_straight_route(source)
 
     def get_straight_route(self, source):
         """

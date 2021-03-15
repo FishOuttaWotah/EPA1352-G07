@@ -54,35 +54,26 @@ class Bridge(Infra):
                  name='Unknown', road_name='Unknown', condition='Unknown'):
         super().__init__(unique_id, model, length, name, road_name)
 
-        self.condition = condition  # class of bridge fragility, from A to D
+        self.condition = condition
         self.delay_time = 0
-        # self.broken_down = False
+        self.broken_down = False
 
-        if hasattr(model, 'prob_bd'):
-            self.prob_bd_own = float(model.prob_bd[self.condition])
-            # prob_bd = model.scenario_df.at[model.scenario, self.condition] / 100
-            self.roll = self.random.random()
-            self.broken_down = (self.roll < self.prob_bd_own)   # float comparison leading to bool
-            self.item = None
-            # if self.roll < self.prob_bd_own:
-            #     self.broken_down = True
-
-        else:
-            raise AttributeError('Model object does not have prob_bd variable for reference')
+        if self.model.scenario:
+            prob_bd = self.model.scenario_df.loc[self.model.scenario_df['Scenario'] == self.model.scenario][self.condition].values[0] / 100
+            if self.random.random() < prob_bd:
+                self.broken_down = True
 
     def get_delay_time(self):
-        # self.delay_time = 0
-        # if self.broken_down:
-        if round(self.length,1) >= 200.0:
-            self.delay_time = self.random.triangular(60, 120, 240)
-        # elif (self.length >= 50.0) & (self.length < 200.0):
-        elif (50.0 <= round(self.length,1) < 200.0):
-            self.delay_time = self.random.uniform(45, 90)
-        # elif (self.length >= 10.0) & (self.length < 50.0):
-
-            self.delay_time = self.random.uniform(15, 60)
-        else:
-            self.delay_time = self.random.uniform(10, 20)
+        self.delay_time = 0
+        if self.broken_down:
+            if self.length >= 200.0:
+                self.delay_time = self.random.triangular(60, 120, 240)
+            elif (self.length >= 50.0) & (self.length < 200.0):
+                self.delay_time = self.random.uniform(45, 90)
+            elif (self.length >= 10.0) & (self.length < 50.0):
+                self.delay_time = self.random.uniform(15, 60)
+            else:
+                self.delay_time = self.random.uniform(10, 20)
         return self.delay_time
 
 
