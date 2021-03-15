@@ -12,6 +12,7 @@ NX expected outputs to MESA
     * create a Road_n_Network object in model
     * current road geometry uses Rory's csv by default '../data/ (make sure it's updated)
     * TO FIND SHORTEST PATH, run <RnN obj>.find_shortest_path(<source>,<target>).
+        You should get a list-like object that's like [sourceID, nodeID, ..., intersectionID, ..., targetID]
     * some dataframe objects can be retrieved from calling <RnN obj>.something:
         .raw = full Rory's dataset in Pandas
         .intersections = subset of intersection points
@@ -118,10 +119,11 @@ class Road_n_Network:
         print(f'{v_source} to {v_target}')
         test_path = nx.algorithms.shortest_paths.generic.shortest_path(self.nx_roads, source=v_source, target=v_target,
                                                                        weight='weight')
-        # test_length = sum([self.nx_roads[test_path[i]][test_path[i+1]]['weight'] for i in range(len(test_path)-1)])
+        test_length = sum([self.nx_roads[test_path[i]][test_path[i+1]]['weight'] for i in range(len(test_path)-1)])
         # test_length = nx.algorithms.shortest_paths.generic.shortest_path_length(self.nx_roads, source=v_source, target=v_target,
         #                                                                     weight='weight')
-        return test_path  # , test_length
+        print(test_length)
+        return test_path, test_length
 
     def test_all_paths(self,target):
         # test all paths to N1 end, including N1 start
