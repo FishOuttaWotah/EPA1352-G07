@@ -30,6 +30,11 @@ To give Pycharm access, here's the TLDR from [Pycharm's page](https://www.jetbra
     - (#2) If you already have the A3 files, you can try opening that directory as a Pycharm project. Go to 'get from Version Control' and input the link <https://github.com/FishOuttaWotah/EPA1352-G07.git>. Pycharm should ask you whether you want to 'merge'/'clone' the repository onto your computer, click yes *(on your own risk/ op eigenrisico!)*. What it *should* do is just update the your project directory with the newer items I've added (a readme file and a NetworkX_sandbox.py file)
 - If the import/clone/merge process is successful, you should see something like A2 and A3 folders in your project folder. A2 is just the leftover project scripts (without the scenario.csv because I'm too lazy to download them separately from DeepNote).  
 
+**Note: you'll need to redo your run settings, since it is blank for every new project, see below**
+
+## PyCharm (Beta)
+
+
 ## Git Basics (Beta)
 Now, you should have an extended Pycharm interface, with extra git commands in the VCS tab, extra popout menus on the left and bottom, such as 'commit', 'pull requests', 'Git'.
 

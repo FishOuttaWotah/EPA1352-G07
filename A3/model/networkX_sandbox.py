@@ -1,6 +1,7 @@
 import networkx as nx
 import pandas as pd
 import random
+
 # import matplotlib.pyplot as plt
 # import numpy as np
 # import os.path
@@ -44,7 +45,8 @@ class Road_n_Network:
         # assumption (safe): above line assumes that the csv file only contains exactly the chars needed to match
 
         if trunc:  # truncated mode is for verification purposes
-            valid_list = ['N1','Z1402','Z1044','Z1042','Z1065','Z1048','Z1124','Z1031','R151','R170','Z1005'] # For the ones that work
+            valid_list = ['N1', 'Z1402', 'Z1044', 'Z1042', 'Z1065', 'Z1048', 'Z1124', 'Z1031', 'R151', 'R170',
+                          'Z1005']  # For the ones that work
             # valid_list = ['N2','R310','R360','R220','R241','Z2013']
             self.raw = self.raw.loc[self.raw.road.isin(valid_list)]
 
@@ -83,7 +85,6 @@ class Road_n_Network:
         #   duplicate intersection sections have the same location/name. NX doesn't care about location much, so this is
         #   reasonable.
 
-
         # self.links2 = self.raw
 
         # Cold storage: sanity check whether intersections have same coordinates/lengths
@@ -119,18 +120,18 @@ class Road_n_Network:
         print(f'{v_source} to {v_target}')
         test_path = nx.algorithms.shortest_paths.generic.shortest_path(self.nx_roads, source=v_source, target=v_target,
                                                                        weight='weight')
-        test_length = sum([self.nx_roads[test_path[i]][test_path[i+1]]['weight'] for i in range(len(test_path)-1)])
+        test_length = sum([self.nx_roads[test_path[i]][test_path[i + 1]]['weight'] for i in range(len(test_path) - 1)])
         # test_length = nx.algorithms.shortest_paths.generic.shortest_path_length(self.nx_roads, source=v_source, target=v_target,
         #                                                                     weight='weight')
         print(test_length)
         return test_path, test_length
 
-    def test_all_paths(self,target):
+    def test_all_paths(self, target):
         # test all paths to N1 end, including N1 start
         successes = []
         fails = []
         for startpoint in self.sourcesinks.index:
-            if nx.algorithms.shortest_paths.generic.has_path(self.nx_roads,startpoint,target):
+            if nx.algorithms.shortest_paths.generic.has_path(self.nx_roads, startpoint, target):
                 # means path exists, intersections work
                 successes.append(startpoint)
             else:
@@ -150,7 +151,7 @@ class Road_n_Network:
                     if nx.algorithms.shortest_paths.generic.has_path(graph.nx_roads, node,
                                                                      road_nodes[-1]):
                         # print(f'\tconnection starts at {node} for {road}')
-                        broken_roads.append((node,road))
+                        broken_roads.append((node, road))
                         break
         return broken_roads
 
@@ -161,13 +162,11 @@ class Road_n_Network:
         for inter_idx in self.intersections.index.unique():
             # draw from raw (for adjacency)
             raw_idx = self.raw[self.raw.id == inter_idx].index
-            raw_above = self.raw.loc[raw_idx-1]
-            raw_below = self.raw.loc[raw_idx+1]
+            raw_above = self.raw.loc[raw_idx - 1]
+            raw_below = self.raw.loc[raw_idx + 1]
             # for adjacent in [raw_above,raw_below]:
             #     if
             pass
-
-
 
 
 if __name__ == '__main__':  # ensures that this script won't run fully when imported
