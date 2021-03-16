@@ -143,17 +143,17 @@ class Source(Infra):
         """
         Generates a truck, sets its path, increases the global and local counters
         """
-        try:
-            agent = Vehicle('Truck' + str(Source.truck_counter), self.model, self)
-            if agent:
-                self.model.schedule.add(agent)
-                agent.set_path()
-                Source.truck_counter += 1
-                self.vehicle_count += 1
-                self.vehicle_generated_flag = True
-                print(str(self) + " GENERATE " + str(agent))
-        except Exception as e:
-            print("Oops!", e.__class__, "occurred.")
+        # try:
+        agent = Vehicle(Source.truck_counter, self.model, self)
+        if agent:
+            self.model.schedule.add(agent)
+            agent.set_path()
+            Source.truck_counter += 1
+            self.vehicle_count += 1
+            self.vehicle_generated_flag = True
+            # print(str(self) + " GENERATE " + str(agent)) # turned off for run performance
+        # except Exception as e:
+        #     print("Oops!", e.__class__, "occurred.")
 
 
 # ---------------------------------------------------------------
@@ -226,6 +226,7 @@ class Vehicle(Agent):
         self.location_offset = location_offset
         self.pos = generated_by.pos
         self.path_ids = path_ids
+        self.model = model
         # default values
         self.state = Vehicle.State.DRIVE
         self.location_index = 0
@@ -243,7 +244,7 @@ class Vehicle(Agent):
         """
         Set the origin destination path of the vehicle
         """
-        self.path_ids = self.model.get_route(self.generated_by.unique_id)
+        self.path_ids, self.distance_travelled = self.model.get_route(self.generated_by.unique_id)
 
     def step(self):
         """
@@ -261,7 +262,7 @@ class Vehicle(Agent):
         """
         To print the vehicle trajectory at each step
         """
-        print(self)
+        # print(self) # turned off for performance
 
     def drive(self):
 

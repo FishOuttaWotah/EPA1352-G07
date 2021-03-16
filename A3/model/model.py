@@ -58,18 +58,24 @@ class BangladeshModel(Model):
 
     file_name = '../data/compiled_roads_bridges.csv'
 
-    def __init__(self, scenario_num=0, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
+    def __init__(self, scenario_num=0, seed=1234567, x_max=500, y_max=500, x_min=0, y_min=0):
 
+        self.random.seed(seed)
         self.schedule = BaseScheduler(self)
+        self.nwx = Road_n_Network()
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
         self.space = None
-        self.sources = []
-        self.sinks = []
+
+        # extract source, sink and intersection data from Road_n_Network data organisation operations
+        self.sources = self.nwx.sourcesinks.index.to_list()
+        self.sinks = self.nwx.sourcesinks.index.to_list()
+        self.intersections = self.nwx.intersections.index.unique().to_list()
+
+        # retrieve scenario parameters from csv
         self.scenario = scenario_num # Number of scenario to look up from scenario table
         # Load scenario table: each row gives the probabilities of breaking down for 1 scenario
         self.scenario_df = pd.read_csv('../data/scenario_table.csv')
-        self.nwx = Road_n_Network()
         self.generate_model()
 
     def generate_model(self):
@@ -101,6 +107,7 @@ class BangladeshModel(Model):
                 """
                 path_ids = df_objects_on_road['id']
                 path_ids.reset_index(inplace=True, drop=True)
+                # self.path_ids_raw = path_ids.copy(deep=False)   # added by Sherman for raw slicing
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
                 path_ids = path_ids[::-1]
@@ -137,14 +144,14 @@ class BangladeshModel(Model):
 
                 if model_type == 'source':
                     agent = Source(row['id'], self, row['length'], name, row['road'])
-                    self.sources.append(agent.unique_id)
+                    # self.sources.append(agent.unique_id)
                 elif model_type == 'sink':
                     agent = Sink(row['id'], self, row['length'], name, row['road'])
-                    self.sinks.append(agent.unique_id)
+                    # self.sinks.append(agent.unique_id)
                 elif model_type == 'sourcesink':
                     agent = SourceSink(row['id'], self, row['length'], name, row['road'])
-                    self.sources.append(agent.unique_id)
-                    self.sinks.append(agent.unique_id)
+                    # self.sources.append(agent.unique_id)
+                    # self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
                     agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'])
                 elif model_type == 'link':
@@ -165,20 +172,29 @@ class BangladeshModel(Model):
         pick up a random route given an origin and find the shortest path
 
         """
-        while True:
+        # while True:
             # different source and sink
-            sink = self.random.choice(self.sinks)
-            if sink is not source:
-                break
+        choices = self.sinks.copy()
+        choices.remove(source)
+        sink = self.random.choice(choices)
+            # if sink is not source:
+            #     break
+        # try
+        self.path_nodes, self.path_length = self.nwx.find_shortest_path(source,sink)
+        # intersections = [item for item in self.path_nodes if item in self.intersections]
+        # print([source] + intersections + [sink])
+        # construct shit
         # Whenever the path isn't defined yet, find the shortest path with nwx and add to dictionary
-        if not (source, sink) in self.path_ids_dict:
-            print("Non existing dict key")
-            path_ids_nwx_gen = self.nwx(source, sink)
+        # if not (source, sink) in self.path_ids_dict:
+        #     print("Non existing dict key")
+        #     path_ids_nwx_gen, length = self.nwx.find_shortest_path(source, sink)
             #self.path_ids_dict[source, sink] = path_ids_nwx_gen
-        return self.path_ids_dict[source, sink]
+        # return self.path_ids_dict[source, sink]
+        return self.path_nodes, round(self.path_length)
 
     def get_route(self, source):
-        return self.get_straight_route(source)
+        # return self.get_straight_route(source)
+        return self.get_random_route(source)
 
     def get_straight_route(self, source):
         """

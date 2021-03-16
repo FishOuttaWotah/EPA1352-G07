@@ -15,94 +15,67 @@ NX expected outputs to MESA
     * TO FIND SHORTEST PATH, run <RnN obj>.find_shortest_path(<source>,<target>).
         You should get a list-like object that's like [sourceID, nodeID, ..., intersectionID, ..., targetID]
     * some dataframe objects can be retrieved from calling <RnN obj>.something:
-        .raw = full Rory's dataset in Pandas
+        .raw = full Rory's dataset in Pandas (with some minor manual edits)
         .intersections = subset of intersection points
         .sourcesinks = sourcesink objects
-        .nodes = node points
         .nx_roads = the actual NX Graph object (which is used for NX functions)
         
-Overarching Assumptions:
-A: always a link-bridge-link system
-A: lengths equals weights (sufficient for Dijkstra's distance setting)
-
-Notes:
-* Nodes can have weights too (in which can be done for bridges)
-* NX's edge growing means that as long as intersections have same identifiers, they will get appended links
-* Network could be initialised in start of simulation, in Infra determination phase
-
-Potential features:
-F: assigned delays could be set as 'distance-normalised for delay' for bridge points 
+Working operation:
+> Road_n_Network class opens the road geometry csv file
 
 """
 
 
 class Road_n_Network:
 
-    def __init__(self, roads_file='../data/compiled_roads_bridges.csv', trunc=False):
+    def __init__(self, roads_file='../data/compiled_roads_bridges.csv'):
         # OPEN ROAD ELEMENT FILES,
         self.raw = pd.read_csv(roads_file)
         self.raw['model_type'] = self.raw.model_type.str.strip()  # ensures only chars remain and no hidden whitespace
         # assumption (safe): above line assumes that the csv file only contains exactly the chars needed to match
 
-        if trunc:  # truncated mode is for verification purposes
-            valid_list = ['N1', 'Z1402', 'Z1044', 'Z1042', 'Z1065', 'Z1048', 'Z1124', 'Z1031', 'R151', 'R170',
-                          'Z1005']  # For the ones that work
-            # valid_list = ['N2','R310','R360','R220','R241','Z2013']
-            self.raw = self.raw.loc[self.raw.road.isin(valid_list)]
-
         # extract sourcesink points, maybe return a randomised end point for one/multiple:
-        self.sourcesinks = self.raw[self.raw.model_type == 'sourcesink']
+        self.sourcesinks = self.raw[self.raw.model_type == 'sourcesink'].copy(deep=False)
         self.sourcesinks.drop(columns=['model_type', 'condition', 'length'], inplace=True)
         self.sourcesinks.set_index(keys='id', drop=False, inplace=True)
 
-        self.intersections = self.raw[self.raw.model_type == 'intersection']
+        self.intersections = self.raw[self.raw.model_type == 'intersection'].copy(deep=False)
         self.intersections.set_index('id', inplace=True)
         self.intersections.sort_index(inplace=True)
 
-        # Separate into dataframe for 'links', clean and prepare for assignment as NX edges
-        self.links = self.raw[self.raw.model_type == 'link']  # extract only 'links'
-        self.links.drop(columns=['model_type', 'condition', 'name'],
-                        inplace=True)  # drop irrelevant columns for NX edge
-        id_col = self.raw.columns.get_loc('id')
-        self.links['source'] = self.raw.iloc[self.links.index - 1, id_col].array  # set NX source, see assumption below
-        self.links['target'] = self.raw.iloc[self.links.index + 1, id_col].array  # ditto for NX target
-        self.links['idx_ori'] = self.links.index  # save original index as column
-        self.links.rename(columns={'length': 'weight'}, inplace=True)  # rename length to weight for NX use
-        self.links.set_index(keys='id', drop=False, inplace=True)  # set index to id codes
-        # assumption (untested): source and target assumes that links are sequential,
-        #   that it's in a node-link-node format in csv.
-
-        # extract nodes (anything other than links), and ensure intersections are represented once (for technical reasons)
-        self.nodes = self.raw[self.raw.model_type != 'link'].copy()
-        self.nodes.set_index(keys='id', drop=False, inplace=True)  # NX takes node IDs from index
-        self.nodes = self.nodes[~self.nodes.duplicated(subset='id', keep='first')]  # eliminate duplicate intersections
-        self.nodes.rename(columns={'length': 'weight', 'index': 'idx_ori'},
-                          inplace=True)  # rename length to NX's weights
-        self.nwdict_nodes = self.nodes[['road', 'id', 'model_type', 'lat', 'lon', 'weight']].to_dict(orient='index')
-        # (may be depreciated)
-        # NOTE: ~ returns inverse of boolean mask
-        # assumption (untested): intersections are duplicated per road in csv. however, the current method assumes that
-        #   duplicate intersection sections have the same location/name. NX doesn't care about location much, so this is
-        #   reasonable.
-
-        # self.links2 = self.raw
-
-        # Cold storage: sanity check whether intersections have same coordinates/lengths
-        # nwdf_inters = self.nwdf_nodes[self.nwdf_nodes.duplicated(subset='id', keep=False)]
-        # for infra_id in nwdf_inters.id.unique():
-        #     # check for differences in
-        #     print(infra_id)
+        # clean per road for edge creation in NX
+        self.links2 = pd.DataFrame()
+        self.nodes2 = pd.DataFrame()
+        for road in self.raw.road.unique():
+            self.road_geometry = self.raw[self.raw.road == road].copy(deep=False)
+            # self.road_links = self.road_geometry[self.road_geometry.model_type != 'sourcesink']
+            self.road_geometry.reset_index(drop=True,inplace=True)
+            self.road_links = self.road_geometry.iloc[1:].copy(deep=True)
+            road_col_id = self.road_geometry.columns.get_loc('id')
+            self.road_links['length'] = 0   # sets edges to zero, only nodes have weights to travel
+            self.road_links['source'] = self.road_geometry.iloc[self.road_links.index - 1, road_col_id].array
+            self.road_links['target'] = self.road_geometry.iloc[self.road_links.index, road_col_id].array
+            self.road_links.set_index('id', drop=False, inplace=True)  # used in edges and nodes!
+            self.road_geometry.rename(columns={'length': 'weight'}, inplace=True)
+            self.links2 = self.links2.append(self.road_links)
+            self.nodes2 = self.nodes2.append(self.road_geometry)
 
         # Create NetworkX Graph object, using links as NX edges
-        self.nx_roads = nx.convert_matrix.from_pandas_edgelist(self.links,
-                                                               edge_attr=['road', 'id', 'lat', 'lon', 'weight'])
+        self.nx_roads = nx.convert_matrix.from_pandas_edgelist(self.links2,
+                                                               edge_attr=['road', 'lat', 'lon'])
+        self.nodes2.drop_duplicates(subset='id',keep='first',inplace=True) # eliminate duplicate intersections
+        self.nodes2.set_index(keys='id', drop=False, inplace=True)  # NX takes node IDs from index
+        self.road_nodes_dict = self.nodes2[['road', 'id', 'model_type', 'lat', 'lon', 'weight']].to_dict(
+            orient='index')
+        nx.set_node_attributes(self.nx_roads,
+                               self.road_nodes_dict)  # appends node attributes (such as labels and weights)
+        #                                                        edge_attr=['road', 'id', 'lat', 'lon', 'weight'])
         self.nx_roads = self.nx_roads.to_undirected(
             as_view=True)  # converts above line from directed to undirected, see below
-        nx.set_node_attributes(self.nx_roads, self.nwdict_nodes)  # appends node attributes (such as labels and weights)
         # ADDENDUM: NX's conversion from Pandas to Graph creates a directed node (single way). Setting to undirected would
         #   mean two-way traffic is possible (in theory)
 
-    def find_shortest_path(self, v_source=None, v_target=None):
+    def find_shortest_path(self, v_source=None, v_target=None, verbose=False):
         """
         Returns the shortest path, given that the NX network object is available.
         Will add more functionality to return the length of shortest path
@@ -117,13 +90,14 @@ class Road_n_Network:
             choices = choices.remove(v_source)
             v_target = random.choice(choices)
 
-        print(f'{v_source} to {v_target}')
+
         test_path = nx.algorithms.shortest_paths.generic.shortest_path(self.nx_roads, source=v_source, target=v_target,
-                                                                       weight='weight')
-        test_length = sum([self.nx_roads[test_path[i]][test_path[i + 1]]['weight'] for i in range(len(test_path) - 1)])
-        # test_length = nx.algorithms.shortest_paths.generic.shortest_path_length(self.nx_roads, source=v_source, target=v_target,
-        #                                                                     weight='weight')
-        print(test_length)
+                                                                       weight='length')
+        # test_length = sum([self.nx_roads[test_path[i]][test_path[i + 1]]['weight'] for i in range(len(test_path) - 1)])
+        test_length = sum([self.nx_roads.nodes[node]['weight'] for node in test_path])
+        if verbose:
+            print(f'{v_source} to {v_target}')
+            print(test_length)
         return test_path, test_length
 
     def test_all_paths(self, target):
