@@ -107,7 +107,6 @@ class BangladeshModel(Model):
                 """
                 path_ids = df_objects_on_road['id']
                 path_ids.reset_index(inplace=True, drop=True)
-                # self.path_ids_raw = path_ids.copy(deep=False)   # added by Sherman for raw slicing
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
                 path_ids = path_ids[::-1]
