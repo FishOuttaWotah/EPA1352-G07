@@ -1,6 +1,6 @@
 from mesa import Agent
 from enum import Enum
-
+from numba import jit
 
 # ---------------------------------------------------------------
 class Infra(Agent):
@@ -26,6 +26,7 @@ class Infra(Agent):
         self.name = name
         self.road_name = road_name
         self.vehicle_count = 0
+        self.collect_list_vehicle = [] # Init. for datacollection, only used in Sink class
 
     def step(self):
         pass
@@ -99,12 +100,21 @@ class Sink(Infra):
     ...
 
     """
+    #!!!TEST
+    #def __init__(self, unique_id):
+    #    self.name_id = "Sink" + str(self.unique_id)
+        #self.collect_list_vehicle = [self.name_id] # Start datacollection list with ID of sink
+
     vehicle_removed_toggle = False
 
+
+
     def remove(self, vehicle):
+        self.collect_list_vehicle.append(vehicle.make_collect_list_vehicle())
         self.model.schedule.remove(vehicle)
         self.vehicle_removed_toggle = not self.vehicle_removed_toggle
-        print(str(self) + ' REMOVE ' + str(vehicle))
+        #print(str(self) + ' REMOVE ' + str(vehicle))
+        # Collect data of removed vehicle into a list
 
 
 # ---------------------------------------------------------------
@@ -220,6 +230,7 @@ class Vehicle(Agent):
     def __init__(self, unique_id, model, generated_by,
                  location_offset=0, path_ids=None):
         super().__init__(unique_id, model)
+        self.unique_id = str(unique_id) + str(generated_by)
         self.generated_by = generated_by
         self.generated_at_step = model.schedule.steps
         self.location = generated_by
@@ -233,6 +244,8 @@ class Vehicle(Agent):
         self.waiting_time = 0
         self.waited_at = None
         self.removed_at_step = None
+        self.collect_list_vehicle = [] # Init. for datacollection, only used in Sink class
+        self.total_waiting_time = 0
 
     def __str__(self):
         return "Vehicle" + str(self.unique_id) + \
@@ -244,7 +257,8 @@ class Vehicle(Agent):
         """
         Set the origin destination path of the vehicle
         """
-        self.path_ids, self.distance_travelled = self.model.get_route(self.generated_by.unique_id)
+        self.path_ids, self.distances = self.model.get_route(self.generated_by.unique_id)
+        self.distance_travelled = sum(self.distances)
 
     def step(self):
         """
@@ -266,17 +280,17 @@ class Vehicle(Agent):
 
     def drive(self):
 
-        # the distance that vehicle drives in a tick
+        # the distance_per_tick that vehicle drives in a tick
         # speed is global now: can change to instance object when individual speed is needed
-        distance = Vehicle.speed * Vehicle.step_time
-        distance_rest = self.location_offset + distance - self.location.length
+        distance_per_tick = Vehicle.speed * Vehicle.step_time
+        distance_rest = self.location_offset + distance_per_tick - self.location.length
 
         if distance_rest > 0:
             # go to the next object
             self.drive_to_next(distance_rest)
         else:
             # remain on the same object
-            self.location_offset += distance
+            self.location_offset += distance_per_tick
 
     def drive_to_next(self, distance):
         """
@@ -286,8 +300,10 @@ class Vehicle(Agent):
         self.location_index += 1
         next_id = self.path_ids[self.location_index]
         next_infra = self.model.schedule._agents[next_id]  # Access to protected member _agents
-
-        if isinstance(next_infra, Sink):
+        # self.next_infra_length = self.distances[self.location_index]
+    
+        if next_id == self.path_ids[-1]:
+        # if isinstance(next_infra, Sink):
             # arrive at the sink
             self.arrive_at_next(next_infra, 0)
             self.removed_at_step = self.model.schedule.steps
@@ -296,10 +312,12 @@ class Vehicle(Agent):
         elif isinstance(next_infra, Bridge):
             self.waiting_time = next_infra.get_delay_time()
             if self.waiting_time > 0:
+                self.total_waiting_time += self.waiting_time
                 # arrive at the bridge and wait
                 self.arrive_at_next(next_infra, 0)
                 self.state = Vehicle.State.WAIT
                 return
+
             # else, continue driving
 
         if next_infra.length > distance:
@@ -317,5 +335,8 @@ class Vehicle(Agent):
         self.location = next_infra
         self.location_offset = location_offset
         self.location.vehicle_count += 1
+
+    def make_collect_list_vehicle(self):
+        return [self.unique_id, self.generated_at_step, self.removed_at_step, self.total_waiting_time, self.distance_travelled]
 
 # EOF -----------------------------------------------------------

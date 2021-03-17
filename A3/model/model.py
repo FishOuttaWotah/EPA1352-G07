@@ -1,6 +1,7 @@
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
+from mesa.datacollection import DataCollector
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
@@ -77,6 +78,11 @@ class BangladeshModel(Model):
         # Load scenario table: each row gives the probabilities of breaking down for 1 scenario
         self.scenario_df = pd.read_csv('../data/scenario_table.csv')
         self.generate_model()
+
+        # Define datacollector and variables to collect
+        self.datacollector = DataCollector(
+            agent_reporters={"Collect_list_vehicle": "collect_list_vehicle"}
+        )
 
     def generate_model(self):
         """
@@ -189,7 +195,7 @@ class BangladeshModel(Model):
         #     path_ids_nwx_gen, length = self.nwx.find_shortest_path(source, sink)
             #self.path_ids_dict[source, sink] = path_ids_nwx_gen
         # return self.path_ids_dict[source, sink]
-        return self.path_nodes, round(self.path_length)
+        return self.path_nodes, self.path_length
 
     def get_route(self, source):
         # return self.get_straight_route(source)

@@ -98,7 +98,7 @@ class Road_n_Network:
         test_path = nx.algorithms.shortest_paths.generic.shortest_path(self.nx_roads, source=v_source, target=v_target,
                                                                        weight='length')
         # sum weight of nodes for the path for the travel distance (and doesn't include edges)
-        test_length = sum([self.nx_roads.nodes[node]['weight'] for node in test_path])
+        test_length = [self.nx_roads.nodes[node]['weight'] for node in test_path]
         if verbose:
             print(f'{v_source} to {v_target}')
             print(test_length)
