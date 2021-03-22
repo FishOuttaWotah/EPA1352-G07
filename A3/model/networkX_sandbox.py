@@ -37,7 +37,7 @@ class Road_n_Network:
         # EXTRACT SOURCESINK POINTS AND INTERSECTION POINTS
         # specified 'shallow' copy to imply reference to original (if original is changed, this does too),
         #   but mostly to shut Pandas up with their warnings
-        self.sourcesinks = self.raw[self.raw.model_type == 'sourcesink'].copy(deep=False)     #
+        self.sourcesinks = self.raw[self.raw.model_type == 'sourcesink'].copy(deep=False)  #
         self.sourcesinks.drop(columns=['model_type', 'condition', 'length'], inplace=True)
         self.sourcesinks.set_index(keys='id', drop=False, inplace=True)
 
@@ -52,14 +52,14 @@ class Road_n_Network:
         * Edges are items between nodes
         
         """
-        self.edges = pd.DataFrame()    # dataframe to grow for edges, ditto next for nodes
+        self.edges = pd.DataFrame()  # dataframe to grow for edges, ditto next for nodes
         self.nodes = pd.DataFrame()
         for road in self.raw.road.unique():
-            self.road_nodes = self.raw[self.raw.road == road].copy(deep=False)   # extract specific road code
+            self.road_nodes = self.raw[self.raw.road == road].copy(deep=False)  # extract specific road code
             self.road_nodes.reset_index(drop=True, inplace=True)  # so that iloc works later
-            self.road_edges = self.road_nodes.iloc[1:].copy(deep=True)   # take N-1 roads because that's number of edges
-            road_col_id = self.road_nodes.columns.get_loc('id')      # just in case 'id' column moves elsewhere
-            self.road_edges['length'] = 0   # creates lengths of zero, only nodes have lengths (for NX weights)
+            self.road_edges = self.road_nodes.iloc[1:].copy(deep=True)  # take N-1 roads because that's number of edges
+            road_col_id = self.road_nodes.columns.get_loc('id')  # just in case 'id' column moves elsewhere
+            self.road_edges['length'] = 0  # creates lengths of zero, only nodes have lengths (for NX weights)
             self.road_edges['source'] = self.road_nodes.iloc[self.road_edges.index - 1, road_col_id].array
             self.road_edges['target'] = self.road_nodes.iloc[self.road_edges.index, road_col_id].array
             self.road_nodes.rename(columns={'length': 'weight'}, inplace=True)
@@ -67,13 +67,15 @@ class Road_n_Network:
             self.nodes = self.nodes.append(self.road_nodes)
 
         # Create NetworkX Graph object, using links as NX edges
-        self.nx_roads = nx.convert_matrix.from_pandas_edgelist(self.edges,edge_attr=['road', 'lat', 'lon'])
+        edgelist = nx.convert_matrix.from_pandas_edgelist(self.edges, edge_attr=['road', 'lat', 'lon'])
+        self.nx_roads = edgelist
         # ^ creates directed NX Graph with edges per row, going from 'source' to 'target', and extra edge attributes
-        self.nodes.drop_duplicates(subset='id', keep='first', inplace=True) # eliminate duplicate intersections for dict creation
+        self.nodes.drop_duplicates(subset='id', keep='first',
+                                   inplace=True)  # eliminate duplicate intersections for dict creation
         self.nodes.set_index(keys='id', drop=False, inplace=True)  # because NX takes node IDs from index
         self.road_nodes_dict = self.nodes[['road', 'id', 'model_type', 'lat', 'lon', 'weight']].to_dict(
-            orient='index') # map DF to nested dict, with node IDs as index identifier
-        nx.set_node_attributes(self.nx_roads,self.road_nodes_dict)  # appends node attributes (coords and weights)
+            orient='index')  # map DF to nested dict, with node IDs as index identifier
+        nx.set_node_attributes(self.nx_roads, self.road_nodes_dict)  # appends node attributes (coords and weights)
         self.nx_roads = self.nx_roads.to_undirected(
             as_view=True)  # converts above line from directed to undirected, see below
         # ADDENDUM: NX's conversion from Pandas to Graph creates a directed node (single way). Setting to undirected would
@@ -129,12 +131,12 @@ class Road_n_Network:
             if nx.algorithms.shortest_paths.generic.has_path(graph.nx_roads, road_nodes[0],
                                                              road_nodes[-1]):
                 if verbose: print(f'{road} is fine')
-                continue # move on to next road
+                continue  # move on to next road
             else:
                 for node in road_nodes:
                     # move down the road points to find the furthest point where connection is possible
                     if nx.algorithms.shortest_paths.generic.has_path(graph.nx_roads, node,
-                                                                     road_nodes[-1]): # if such a point is found
+                                                                     road_nodes[-1]):  # if such a point is found
                         if verbose: print(f'\tconnection starts at {node} for {road}')
                         broken_roads.append((node, road))
                         break

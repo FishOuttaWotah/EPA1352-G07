@@ -28,12 +28,15 @@ To give Pycharm access, here's the TLDR from [Pycharm's page](https://www.jetbra
 - There are two ways to get the repository onto your computer. If you have the A3 files on your computer, try #2 and see if it works for you:
     - (#1) In File Explorer, create an empty folder and open as a Pycharm project. Go to the VCS tab in Pycharm and find 'get from Version Control'. Here, input this link to  the repository: <https://github.com/FishOuttaWotah/EPA1352-G07.git>. Pycharm would ask you if you want to 'clone' the repository onto the drive, click yes, and Pycharm then downloads the files from the repository for you.
     - (#2) If you already have the A3 files, you can try opening that directory as a Pycharm project. Go to 'get from Version Control' and input the link <https://github.com/FishOuttaWotah/EPA1352-G07.git>. Pycharm should ask you whether you want to 'merge'/'clone' the repository onto your computer, click yes *(on your own risk/ op eigenrisico!)*. What it *should* do is just update the your project directory with the newer items I've added (a readme file and a NetworkX_sandbox.py file)
-- If the import/clone/merge process is successful, you should see something like A2 and A3 folders in your project folder. A2 is just the leftover project scripts (without the scenario.csv because I'm too lazy to download them separately from DeepNote).  
+- If the import/clone/merge process is successful, you should see something like A2 and A3 folders in your project folder. A2 is just the leftover project scripts for reference.
 
-**Note: you'll need to redo your run settings, since it is blank for every new project, see below**
+**Note: you'll need to redo your run settings, since it is blank for every new project.** To do so, go to the script you plan to run, and create a 'run configuration', which defines specific developer-level settings for running the scripts. We only want to run a specific file with a specific Python version, so here's some things you need to do:
+- add a run configuration (+ icon), find the Python template under the Templates dropdown
+- input the directory path to your script 
+- check your Python version is set correctly (especially if you have different versions and environments like the conda thing we did). There's also the setting 'run with Python console', turn it on if you prefer (see Pycharm tips why you should).
+- maybe put a name for it (doesn't really matter) and save the configuration.
 
-## PyCharm (Beta)
-
+The convenient thing about the run config setting is that you can also run it for different files. In the editor for the script you want to run, just right click and look for 'run <runConfigName>', and Pycharm will run that file with the run settings.
 
 ## Git Basics (Beta)
 Now, you should have an extended Pycharm interface, with extra git commands in the VCS tab, extra popout menus on the left and bottom, such as 'commit', 'pull requests', 'Git'.
@@ -57,4 +60,33 @@ On the right bottom of Pycharm, you should see a branch-looking icon with 'main'
 
 Branches are duplicates of the same repository, so you can experiment and test new features without breaking the original. Updating 'main' branch is reserved for verified builds, when we've tested them and are happy with it. As collaborators, you should be able to create branches and merge them with other branches. 
 
+## Common issues you'll encounter
+// Merge request & merging conflicts
+// OHNOIVECOMMITTEDTOTHEWRONGBRANCH
+
+# PyCharm: some fancy stuff (Beta)
+PyCharm has some real good things that even noobs like us can really appreciate. This is a guide for them. Some simple tricks first:
+- shift+alt+(up/down) to move a line up or down
+- shift+/ to comment/uncomment
+- if you aren't highlighting text, cut/copy actions copy the entire line 
+
+## Renaming stuff (code **refactoring**) {shift+f6}
+To rename a variable that's present in the script (maybe also in other files, in comments and strings), highlight the variable and find 'refactor' in the top bar or right click menu. Look for 'rename', and type in the new variable name. If the option's available, check the tick box to check in comments and strings, and also the dropdown tab to specify whether to include searching for this variable in other project files. 
+
+Sometimes the refactoring dialog would show you the usages of this variable in other files, don't panic, just check if the usages make sense and don't conflict with other similar-sounding variables, and continue with the refactor. The keyboard shortcut (shift+f6 or whatever you have) may bring up a different refactor dialog as well, so play around with it but be ready to undo any damage.
+
+## Code **suggestions** 
+When you fill in code, you'll get a dropdown of suggestions from PyCharm. You don't need to type out the full variable name, but just part of the name that's easily identifiable. EG, if you're working in a Pandas script with lots of DataFrames starting with 'df', if you want to access 'df_not_hentai', just start typing 'hent' and Pycharm probably knows what you want.
+
+Debug tip: code suggestions are drawn from what items the space you're typing in could access (class, functions, attributes), so if Pycharm doesn't suggest anything that you know you have, it's likely that you cannot access it in that area, probably an import issue, a typo, or no access (especially in functions and classes).
+
+## 'Folding' code segments you aren't interested in (code **folding**) {ctrl+.}
+
+ 
+// run with console
+// run with debug
+// code refactoring
+// code folding
+// code suggestions
+// code cleanup
 
