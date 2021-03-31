@@ -1,10 +1,12 @@
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.space import ContinuousSpace
+from mesa.datacollection import DataCollector
 from components import Source, Sink, SourceSink, Bridge, Link, Intersection
 import pandas as pd
 from collections import defaultdict
-import networkx as nx
+from networkX_sandbox_A4 import Road_n_Network
+
 
 # ---------------------------------------------------------------
 def set_lat_lon_bound(lat_min, lat_max, lon_min, lon_max, edge_ratio=0.02):
@@ -55,20 +57,32 @@ class BangladeshModel(Model):
 
     step_time = 1
 
-    # file_name = '../data/demo-4.csv'
-    file_name = '../data/df_road_N1andN2.csv'
+    file_name = '../data/network_with_traffic.csv'
 
-    def __init__(self, seed=None, x_max=500, y_max=500, x_min=0, y_min=0):
+    def __init__(self, scenario_num=0, seed=1234567, x_max=500, y_max=500, x_min=0, y_min=0):
 
+        self.random.seed(seed)
         self.schedule = BaseScheduler(self)
+        self.nwx = Road_n_Network()
         self.running = True
         self.path_ids_dict = defaultdict(lambda: pd.Series())
         self.space = None
-        self.sources = []
-        self.sinks = []
-        self.G = nx.Graph()
 
+        # extract source, sink and intersection data from Road_n_Network data organisation operations
+        self.sources = self.nwx.sourcesinks.index.to_list()
+        self.sinks = self.nwx.sourcesinks.index.to_list()
+        self.intersections = self.nwx.intersections.index.unique().to_list()
+
+        # retrieve scenario parameters from csv
+        self.scenario = scenario_num # Number of scenario to look up from scenario table
+        # Load scenario table: each row gives the probabilities of breaking down for 1 scenario
+        self.scenario_df = pd.read_csv('../data/scenario_table.csv')
         self.generate_model()
+
+        # Define datacollector and variables to collect
+        self.datacollector = DataCollector(
+            agent_reporters={"Collect_list_vehicle": "collect_list_vehicle"}
+        )
 
     def generate_model(self):
         """
@@ -80,12 +94,7 @@ class BangladeshModel(Model):
         df = pd.read_csv(self.file_name)
 
         # a list of names of roads to be generated
-        # TODO You can also read in the road column to generate this list automatically
-        # roads = ['N1', 'N2']
-
-        roads = ['N1', 'N2', 'N105', 'N102', 'N104', 'N204', 'N207']
-
-        # roads = df['road'].unique()
+        roads = df.road.unique()
 
         df_objects_all = []
         for road in roads:
@@ -110,13 +119,6 @@ class BangladeshModel(Model):
                 path_ids.reset_index(inplace=True, drop=True)
                 self.path_ids_dict[path_ids[0], path_ids.iloc[-1]] = path_ids
                 self.path_ids_dict[path_ids[0], None] = path_ids
-
-                """
-                Create NetworkX Graph road by road (path by path)
-                """
-                path_G = nx.path_graph(path_ids)
-                self.G.add_nodes_from(path_G)
-                self.G.add_edges_from(path_G.edges)
 
         # put back to df with selected roads so that min and max and be easily calculated
         df = pd.concat(df_objects_all)
@@ -147,14 +149,14 @@ class BangladeshModel(Model):
 
                 if model_type == 'source':
                     agent = Source(row['id'], self, row['length'], name, row['road'])
-                    self.sources.append(agent.unique_id)
+                    # self.sources.append(agent.unique_id)
                 elif model_type == 'sink':
                     agent = Sink(row['id'], self, row['length'], name, row['road'])
-                    self.sinks.append(agent.unique_id)
+                    # self.sinks.append(agent.unique_id)
                 elif model_type == 'sourcesink':
                     agent = SourceSink(row['id'], self, row['length'], name, row['road'])
-                    self.sources.append(agent.unique_id)
-                    self.sinks.append(agent.unique_id)
+                    # self.sources.append(agent.unique_id)
+                    # self.sinks.append(agent.unique_id)
                 elif model_type == 'bridge':
                     agent = Bridge(row['id'], self, row['length'], name, row['road'], row['condition'])
                 elif model_type == 'link':
@@ -170,27 +172,32 @@ class BangladeshModel(Model):
                     self.space.place_agent(agent, (x, y))
                     agent.pos = (x, y)
 
-    def get_straight_route(self, source):
-        return self.get_route(source, None)
-
     def get_random_route(self, source):
         """
-        pick up a random route given an origin
-        """
-        while True:
-            # different source and sink
-            sink = self.random.choice(self.sinks)
-            if sink is not source:
-                break
-        return self.get_route(source, sink)
+        pick up a random route given an origin and find the shortest path
 
-    def get_route(self, source, sink):
-        if (source, sink) in self.path_ids_dict:
-            return self.path_ids_dict[source, sink]
-        else:
-            path_ids = pd.Series(nx.shortest_path(self.G, source, sink))
-            self.path_ids_dict[source, sink] = path_ids
-            return path_ids
+        """
+        # while True:
+            # different source and sink
+        choices = self.sinks.copy()
+        choices.remove(source)
+        sink = self.random.choice(choices)
+            # if sink is not source:
+            #     break
+        # try
+        self.path_nodes, self.path_length = self.nwx.find_shortest_path(source,sink)
+
+        return self.path_nodes, self.path_length
+
+    def get_route(self, source):
+        # return self.get_straight_route(source)
+        return self.get_random_route(source)
+
+    def get_straight_route(self, source):
+        """
+        pick up a straight route given an origin
+        """
+        return self.path_ids_dict[source, None]
 
     def step(self):
         """
